@@ -1,8 +1,11 @@
 package davis.rachel.giffedagain;
 
+        import android.content.Intent;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
         import android.media.Image;
+        import android.net.Uri;
+        import android.provider.MediaStore;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
@@ -25,13 +28,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void go(View view){
-        Bitmap i = BitmapFactory.decodeResource(getResources(),R.drawable.kitten);
-        Bitmap j = BitmapFactory.decodeResource(getResources(),R.drawable.puppy);
+        Bitmap i = BitmapFactory.decodeResource(getResources(),R.drawable.screen);
+        Bitmap j = BitmapFactory.decodeResource(getResources(), R.drawable.puppy);
         byte[] b = make(i, j);
 
         Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
-        ImageView image = (ImageView) findViewById(R.id.imageView1);
-        image.setImageBitmap(bmp);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(),bmp , "signature", null);
+        Uri sigURI = Uri.parse(path);
+        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.setType("plain/text");
+        //emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {email});
+        if(sigURI != null){
+            emailIntent.putExtra(Intent.EXTRA_STREAM, sigURI);
+        }
+        this.startActivity(Intent.createChooser(emailIntent, "Sending Email...."));
+
     }
     public byte[] make(Bitmap i, Bitmap j) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

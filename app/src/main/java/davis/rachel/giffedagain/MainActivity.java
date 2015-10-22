@@ -5,6 +5,7 @@ package davis.rachel.giffedagain;
         import android.media.Image;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
+        import android.util.Log;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
@@ -24,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void go(View view){
-        Bitmap i = BitmapFactory.decodeFile("puppy.jpg");
-        Bitmap j = BitmapFactory.decodeFile("kitten.jpg");
+        Bitmap i = BitmapFactory.decodeResource(getResources(),R.drawable.kitten);
+        Bitmap j = BitmapFactory.decodeResource(getResources(),R.drawable.puppy);
         byte[] b = make(i, j);
 
         Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);

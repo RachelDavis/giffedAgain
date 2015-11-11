@@ -17,6 +17,11 @@ package davis.rachel.giffedagain;
         import java.io.ByteArrayOutputStream;
         import java.io.File;
         import java.util.Iterator;
+        import android.os.Parcelable;
+        import java.lang.Object;
+        import com.google.android.gms.wearable.Asset;
+        import com.google.android.gms.wearable.PutDataRequest;
+        import com.google.android.gms.wearable.Wearable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,24 +31,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
     }
-
     public void go(View view){
         Bitmap i = BitmapFactory.decodeResource(getResources(),R.drawable.screen);
         Bitmap j = BitmapFactory.decodeResource(getResources(), R.drawable.puppy);
         byte[] b = make(i, j);
-
-        Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(),bmp , "signature", null);
+        Asset gif = Asset.createFromBytes(b);
+        //Uri s = gif.getUri();
+        //Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
+        //ImageView image = (ImageView) findViewById(R.id.imageView1);
+        //image.setImageBitmap(gif);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(),gif , "signature", null);
         Uri sigURI = Uri.parse(path);
         final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
         emailIntent.setType("plain/text");
-        //emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {email});
+       // emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {email});
         if(sigURI != null){
             emailIntent.putExtra(Intent.EXTRA_STREAM, sigURI);
         }
-        this.startActivity(Intent.createChooser(emailIntent, "Sending Email...."));
-
+       this.startActivity(Intent.createChooser(emailIntent, "Sending Email...."));
     }
+
     public byte[] make(Bitmap i, Bitmap j) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         GifSequenceWriter g = new GifSequenceWriter();
